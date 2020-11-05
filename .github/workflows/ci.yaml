@@ -1,10 +1,17 @@
 name: CI
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    env:
+      CONTAINER_REGISTRY: ghcr.io/${{ github.repository_owner }}
 
     steps:
       - uses: actions/checkout@v2
@@ -29,3 +36,17 @@ jobs:
         with:
           name: Package
           path: staging
+
+      - name: Create image
+        run: |
+          docker build -f src/main/docker/Dockerfile.fast-jar -t drogue-vorto-converter .
+
+      - name: Login to github container repository
+        if: ${{github.head_ref == ''}}
+        run: echo "${{ secrets.GHCR_PAT }}" | docker login https://ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Create images
+        if: ${{github.head_ref == ''}}
+        run: |
+          docker tag drogue-vorto-converter $CONTAINER_REGISTRY/drogue-vorto-converter:latest
+          docker push $CONTAINER_REGISTRY/drogue-vorto-converter:latest
