@@ -45,7 +45,7 @@ jobs:
         if: ${{github.head_ref == ''}}
         run: echo "${{ secrets.GHCR_PAT }}" | docker login https://ghcr.io -u ${{ github.actor }} --password-stdin
 
-      - name: Create images
+      - name: Push image
         if: ${{github.head_ref == ''}}
         run: |
           docker tag drogue-vorto-converter $CONTAINER_REGISTRY/drogue-vorto-converter:latest
