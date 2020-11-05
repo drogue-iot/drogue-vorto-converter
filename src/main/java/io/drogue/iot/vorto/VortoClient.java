@@ -34,6 +34,7 @@ public interface VortoClient {
 
     default String getAuthorizationHeader() {
         final Config config = ConfigProvider.getConfig();
-        return config.getValue("apiKey.vorto", String.class);
+        final String token = config.getValue("apiKey.vorto", String.class);
+        return "Bearer " + token;
     }
 }
