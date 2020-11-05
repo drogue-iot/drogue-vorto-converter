@@ -12,6 +12,7 @@ jobs:
 
     env:
       CONTAINER_REGISTRY: ghcr.io/${{ github.repository_owner }}
+      IMAGE_NAME: vorto-converter
 
     steps:
       - uses: actions/checkout@v2
@@ -39,7 +40,7 @@ jobs:
 
       - name: Create image
         run: |
-          docker build -f src/main/docker/Dockerfile.fast-jar -t drogue-vorto-converter .
+          docker build -f src/main/docker/Dockerfile.fast-jar -t vorto-converter .
 
       - name: Login to github container repository
         if: ${{github.head_ref == ''}}
@@ -48,5 +49,5 @@ jobs:
       - name: Push image
         if: ${{github.head_ref == ''}}
         run: |
-          docker tag drogue-vorto-converter $CONTAINER_REGISTRY/drogue-vorto-converter:latest
-          docker push $CONTAINER_REGISTRY/drogue-vorto-converter:latest
+          docker tag vorto-converter ${CONTAINER_REGISTRY}/${IMAGE_NAME}:latest
+          docker push ${CONTAINER_REGISTRY}/${IMAGE_NAME}:latest
