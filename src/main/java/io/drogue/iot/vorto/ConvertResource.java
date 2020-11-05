@@ -59,4 +59,5 @@ public class ConvertResource {
 
         return Response.ok(gson.toJson(ditto)).build();
     }
+
 }
