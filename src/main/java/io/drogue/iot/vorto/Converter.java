@@ -34,6 +34,14 @@ public class Converter {
     @POST
     public Response convert(final CloudEvent event) {
 
+        if (event == null || event.getData() == null) {
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity(new ErrorInformation("NoData", "No data in cloud event"))
+                    .build();
+        }
+
         var modelId = event.getAttribute("model_id");
         var deviceId = event.getAttribute("device_id");
 
@@ -55,8 +63,8 @@ public class Converter {
         if (spec.isEmpty()) {
             return Response
                     .status(Response.Status.NOT_FOUND)
-                    .type(MediaType.TEXT_PLAIN)
-                    .entity("Model not found")
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity(new ErrorInformation("ModelNotFound", String.format("Unable to find model: '%s'", modelId)))
                     .build();
         }
 
