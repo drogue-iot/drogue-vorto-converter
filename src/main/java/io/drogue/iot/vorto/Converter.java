@@ -42,8 +42,8 @@ public class Converter {
                     .build();
         }
 
-        var modelId = event.getAttribute("model_id");
-        var deviceId = event.getAttribute("device_id");
+        var modelId = event.getExtension("model_id");
+        var deviceId = event.getExtension("device_id");
 
         LOG.info("Converting - modelId: {}, deviceId: {}", modelId, deviceId);
 
