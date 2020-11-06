@@ -3,10 +3,8 @@ package io.drogue.iot.vorto;
 import java.nio.charset.StandardCharsets;
 
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -33,7 +31,7 @@ public class Converter {
 
     @POST
     @Path("/debug")
-    public Response catchAll(@Context HttpRequest request, String payload) {
+    public Response debug(@Context HttpRequest request, String payload) {
         LOG.info("Caught: {}", request);
         LOG.info("Headers:");
 
@@ -43,12 +41,10 @@ public class Converter {
 
         LOG.info("Payload:\n{}", payload);
 
-        return Response.status(Response.Status.NOT_FOUND).build();
+        return Response.accepted().build();
     }
 
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
     public Response convert(final CloudEvent event) {
 
         if (event == null || event.getData() == null) {
