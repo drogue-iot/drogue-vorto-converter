@@ -1,7 +1,12 @@
 package io.drogue.iot.vorto;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
+import javax.activation.MimeType;
+import javax.activation.MimeTypeParseException;
 import javax.inject.Inject;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -25,6 +30,7 @@ import io.cloudevents.core.v1.CloudEventBuilder;
 public class Converter {
 
     private static final Logger LOG = LoggerFactory.getLogger(Converter.class);
+    private static final Gson GSON = new GsonBuilder().create();
 
     @Inject
     VortoRepository repository;
@@ -70,10 +76,15 @@ public class Converter {
 
         LOG.info("CloudEvent: {}", event);
 
-        var data = event.getData();
+        final Object data;
+        if (isJson(event.getDataContentType())) {
+            data = GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(event.getData()), StandardCharsets.UTF_8), Map.class);
+        } else {
+            data = event.getData();
+        }
 
         if (LOG.isInfoEnabled()) {
-            LOG.info("Data: {}", new String(data, StandardCharsets.UTF_8));
+            LOG.info("Data: {}", data);
         }
 
         var spec = repository.getById(modelId.toString());
@@ -85,15 +96,18 @@ public class Converter {
                     .build();
         }
 
-        final MappingEngine engine = MappingEngine.create(spec.get());
+        var mapping = spec.get();
+
+        LOG.info("Mapping specification: {}", mapping);
+
+        final MappingEngine engine = MappingEngine.create(mapping);
 
         var output = engine
                 .mapSource(data);
 
         var ditto = TwinPayloadFactory.toDittoProtocol(output, deviceId.toString());
-        Gson gson = new GsonBuilder().create();
 
-        var newData = gson.toJson(ditto);
+        var newData = GSON.toJson(ditto);
 
         var result = new CloudEventBuilder(event)
                 .withData("text/json", newData.getBytes(StandardCharsets.UTF_8))
@@ -102,6 +116,39 @@ public class Converter {
         LOG.info("Outcome: {}", newData);
 
         return Response.ok(result).build();
+    }
+
+    /**
+     * Test if a mime type reflects JSON.
+     *
+     * @param type The type to test.
+     * @return {@code true} if the type is JSON, {@code false} otherwise.
+     */
+    static boolean isJson(final String type) {
+
+        if (type == null) {
+            return false;
+        }
+
+        final MimeType parsed;
+        try {
+            parsed = new MimeType(type);
+        } catch (MimeTypeParseException e) {
+            return false;
+        }
+
+        var sub = parsed.getSubType();
+
+        if (sub.equals("json")) {
+            return true;
+        }
+
+        if (sub.endsWith("+json")) {
+            return true;
+        }
+
+        return false;
+
     }
 
 }

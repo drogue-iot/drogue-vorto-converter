@@ -4,7 +4,6 @@ import java.util.Map;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -28,12 +27,6 @@ public class ConvertResource {
     @Inject
     VortoRepository repository;
 
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public String hello() {
-        return "hello";
-    }
-
     @POST
     @Path("/{modelId}/{deviceId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -44,8 +37,8 @@ public class ConvertResource {
         if (spec.isEmpty()) {
             return Response
                     .status(Response.Status.NOT_FOUND)
-                    .type(MediaType.TEXT_PLAIN)
-                    .entity("Model not found")
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity(new ErrorInformation("ModelNotFound", String.format("Unable to find model: '%s'", modelId)))
                     .build();
         }
 

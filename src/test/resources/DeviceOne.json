@@ -1,0 +1,93 @@
+{
+  "infoModel": {
+    "targetPlatformKey": "vorto_private_ctron_DeviceOne_1_0_0",
+    "stereotypes": [],
+    "mappingReference": null,
+    "vortolang": "1.0",
+    "id": {
+      "name": "DeviceOne",
+      "namespace": "vorto.private.ctron",
+      "version": "1.0.0",
+      "prettyFormat": "vorto.private.ctron:DeviceOne:1.0.0"
+    },
+    "type": "InformationModel",
+    "displayName": "DeviceOne",
+    "description": "Information Model for DeviceOne",
+    "category": null,
+    "fileName": "DeviceOne.infomodel",
+    "modelType": "Infomodel",
+    "references": [
+      {
+        "name": "BlockOne",
+        "namespace": "vorto.private.ctron",
+        "version": "1.0.0",
+        "prettyFormat": "vorto.private.ctron:BlockOne:1.0.0"
+      }
+    ],
+    "functionblocks": [
+      {
+        "targetPlatformKey": "vorto_private_ctron_DeviceOne_1_0_0",
+        "stereotypes": [],
+        "mappingReference": {
+          "name": "BlockOnePayloadMapping",
+          "namespace": "vorto.private.ctron.deviceone.blockone",
+          "version": "1.0.0",
+          "prettyFormat": "vorto.private.ctron.deviceone.blockone:BlockOnePayloadMapping:1.0.0"
+        },
+        "mandatory": false,
+        "name": "blockOne",
+        "description": null,
+        "type": {
+          "targetPlatformKey": "vorto_private_ctron_DeviceOne_1_0_0",
+          "stereotypes": [],
+          "mappingReference": null,
+          "vortolang": "1.0",
+          "id": {
+            "name": "BlockOne",
+            "namespace": "vorto.private.ctron",
+            "version": "1.0.0",
+            "prettyFormat": "vorto.private.ctron:BlockOne:1.0.0"
+          },
+          "type": "Functionblock",
+          "displayName": "BlockOne",
+          "description": "Functionblock for BlockOne",
+          "category": null,
+          "fileName": "BlockOne.fbmodel",
+          "modelType": "FunctionblockModel",
+          "references": [],
+          "configurationProperties": [],
+          "statusProperties": [
+            {
+              "targetPlatformKey": "vorto_private_ctron_DeviceOne_1_0_0",
+              "stereotypes": [
+                {
+                  "name": "source",
+                  "attributes": {
+                    "xpath": "temp"
+                  }
+                }
+              ],
+              "mappingReference": null,
+              "mandatory": true,
+              "name": "temperature",
+              "description": null,
+              "type": "DOUBLE",
+              "constraints": [],
+              "attributes": [],
+              "multiple": false,
+              "primitive": true
+            }
+          ],
+          "faultProperties": [],
+          "events": [],
+          "operations": [],
+          "superType": null
+        },
+        "constraints": [],
+        "attributes": [],
+        "multiple": false,
+        "primitive": false
+      }
+    ]
+  }
+}
