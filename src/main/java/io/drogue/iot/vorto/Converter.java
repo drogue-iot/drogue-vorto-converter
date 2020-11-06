@@ -95,7 +95,7 @@ public class Converter {
                 .withData("text/json", newData.getBytes(StandardCharsets.UTF_8))
                 .build();
 
-        LOG.info("Outcome: {}", result);
+        LOG.info("Outcome: {}", newData);
 
         return Response.ok(result).build();
     }
