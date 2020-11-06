@@ -12,6 +12,8 @@ import javax.ws.rs.core.Response;
 
 import org.eclipse.vorto.mapping.engine.MappingEngine;
 import org.eclipse.vorto.mapping.targetplatform.ditto.TwinPayloadFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -24,6 +26,8 @@ import io.cloudevents.core.v1.CloudEventBuilder;
 @Consumes(MediaType.APPLICATION_JSON)
 public class Converter {
 
+    private static final Logger LOG = LoggerFactory.getLogger(Converter.class);
+
     @Inject
     VortoRepository repository;
 
@@ -33,13 +37,17 @@ public class Converter {
         var modelId = event.getAttribute("model_id");
         var deviceId = event.getAttribute("device_id");
 
+        LOG.info("Converting - modelId: {}, deviceId: {}", modelId, deviceId);
+
         if (!(modelId instanceof String)) {
-            Response.ok(event);
+            return Response.ok(event).build();
         }
 
         if (!(deviceId instanceof String)) {
-            Response.ok(event);
+            return Response.ok(event).build();
         }
+
+        LOG.info("CloudEvent: {}", event);
 
         var data = event.getData();
 
@@ -65,6 +73,8 @@ public class Converter {
         var result = new CloudEventBuilder(event)
                 .withData("text/json", newData.getBytes(StandardCharsets.UTF_8))
                 .build();
+
+        LOG.info("Outcome: {}", result);
 
         return Response.ok(result).build();
     }
