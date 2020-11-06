@@ -72,6 +72,10 @@ public class Converter {
 
         var data = event.getData();
 
+        if (LOG.isInfoEnabled()) {
+            LOG.info("Data: {}", new String(data, StandardCharsets.UTF_8));
+        }
+
         var spec = repository.getById(modelId.toString());
         if (spec.isEmpty()) {
             return Response
