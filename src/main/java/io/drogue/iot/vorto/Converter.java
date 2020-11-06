@@ -7,11 +7,13 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.eclipse.vorto.mapping.engine.MappingEngine;
 import org.eclipse.vorto.mapping.targetplatform.ditto.TwinPayloadFactory;
+import org.jboss.resteasy.spi.HttpRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,8 +24,6 @@ import io.cloudevents.CloudEvent;
 import io.cloudevents.core.v1.CloudEventBuilder;
 
 @Path("/")
-@Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
 public class Converter {
 
     private static final Logger LOG = LoggerFactory.getLogger(Converter.class);
@@ -32,6 +32,23 @@ public class Converter {
     VortoRepository repository;
 
     @POST
+    @Path("/debug")
+    public Response catchAll(@Context HttpRequest request, String payload) {
+        LOG.info("Caught: {}", request);
+        LOG.info("Headers:");
+
+        for (var entry : request.getHttpHeaders().getRequestHeaders().entrySet()) {
+            LOG.info("  {} = {}", entry.getKey(), entry.getValue());
+        }
+
+        LOG.info("Payload:\n{}", payload);
+
+        return Response.status(Response.Status.NOT_FOUND).build();
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response convert(final CloudEvent event) {
 
         if (event == null || event.getData() == null) {
