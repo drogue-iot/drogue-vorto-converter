@@ -90,6 +90,7 @@ public class Converter {
 
         var spec = repository.getById(modelId.toString());
         if (spec.isEmpty()) {
+            LOG.debug("Model {} not found", modelId);
             return Response
                     .status(Response.Status.NOT_FOUND)
                     .type(MediaType.APPLICATION_JSON)
