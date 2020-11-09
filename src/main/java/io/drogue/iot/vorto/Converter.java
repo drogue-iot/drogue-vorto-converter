@@ -110,7 +110,7 @@ public class Converter {
         var newData = GSON.toJson(ditto);
 
         var result = new CloudEventBuilder(event)
-                .withData("text/json", newData.getBytes(StandardCharsets.UTF_8))
+                .withData("application/json", newData.getBytes(StandardCharsets.UTF_8))
                 .build();
 
         LOG.info("Outcome: {}", newData);
