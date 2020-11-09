@@ -1,5 +1,8 @@
 package io.drogue.iot.vorto;
 
+/**
+ * Canonical error information.
+ */
 public class ErrorInformation {
 
     private final String error;
