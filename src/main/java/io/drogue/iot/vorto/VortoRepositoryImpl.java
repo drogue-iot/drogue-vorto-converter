@@ -34,7 +34,7 @@ public class VortoRepositoryImpl implements VortoRepository {
 
         var spec = client.getModel(id);
 
-        LOG.info("Spec:\n{}", spec);
+        LOG.debug("Spec:\n{}", spec);
 
         try (InputStream input = IOUtils.toInputStream(spec, StandardCharsets.UTF_8)) {
             return Optional.ofNullable(IMappingSpecification.newBuilder().fromInputStream(input).build());
