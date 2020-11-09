@@ -1,7 +1,7 @@
 # Drogue IoT Vorto Converter
 
 [![CI](https://github.com/drogue-iot/drogue-vorto-converter/workflows/CI/badge.svg)](https://github.com/drogue-iot/drogue-vorto-converter/actions?query=workflow%3A%22CI%22)
-[![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/drogue-iot/drogue-vorto-converter?sort=semver)](https://github.com/drogue-iot/drogue-vorto-converter/releases)
+[![GitHub release (latest SemVer)](https://img.shields.io/github/v/tag/drogue-iot/drogue-vorto-converter?sort=semver)](https://github.com/drogue-iot/drogue-vorto-converter/releases)
 [![Matrix](https://img.shields.io/matrix/drogue-iot:matrix.org)](https://matrix.to/#/#drogue-iot:matrix.org)
 
 This is a [Knative](https://knative.dev/) event converter for IoT related payload, using the
