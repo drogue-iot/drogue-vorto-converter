@@ -2,6 +2,7 @@ package io.drogue.iot.vorto;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
@@ -74,7 +75,7 @@ public class Converter {
             return Response.ok(event).build();
         }
 
-        LOG.info("CloudEvent: {}", event);
+        LOG.debug("CloudEvent: {}", event);
 
         final Object data;
         if (isJson(event.getDataContentType())) {
@@ -83,8 +84,8 @@ public class Converter {
             data = event.getData();
         }
 
-        if (LOG.isInfoEnabled()) {
-            LOG.info("Data: {}", data);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Data: {}", data);
         }
 
         var spec = repository.getById(modelId.toString());
@@ -98,7 +99,7 @@ public class Converter {
 
         var mapping = spec.get();
 
-        LOG.info("Mapping specification: {}", mapping);
+        LOG.debug("Mapping specification: {}", mapping);
 
         final MappingEngine engine = MappingEngine.create(mapping);
 
@@ -111,9 +112,10 @@ public class Converter {
 
         var result = new CloudEventBuilder(event)
                 .withData(MediaType.APPLICATION_JSON, newData.getBytes(StandardCharsets.UTF_8))
+                .withDataSchema(URI.create("ditto:" + modelId))
                 .build();
 
-        LOG.info("Outcome: {}", newData);
+        LOG.debug("Outcome: {}", newData);
 
         return Response.ok(result).build();
     }

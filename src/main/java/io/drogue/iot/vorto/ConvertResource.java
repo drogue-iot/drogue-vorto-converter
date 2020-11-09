@@ -1,5 +1,6 @@
 package io.drogue.iot.vorto;
 
+import java.net.URI;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -13,6 +14,8 @@ import javax.ws.rs.core.Response;
 
 import org.eclipse.vorto.mapping.engine.MappingEngine;
 import org.eclipse.vorto.mapping.targetplatform.ditto.TwinPayloadFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -22,6 +25,8 @@ import io.quarkus.arc.profile.IfBuildProfile;
 @Path("/convert")
 @IfBuildProfile("dev")
 public class ConvertResource {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ConvertResource.class);
 
     @Inject
     VortoRepository repository;
@@ -48,6 +53,8 @@ public class ConvertResource {
 
         var ditto = TwinPayloadFactory.toDittoProtocol(output, deviceId);
         Gson gson = new GsonBuilder().create();
+
+        LOG.info("Schema UIR: {}", URI.create("ditto:" + modelId));
 
         return Response.ok(gson.toJson(ditto)).build();
     }
