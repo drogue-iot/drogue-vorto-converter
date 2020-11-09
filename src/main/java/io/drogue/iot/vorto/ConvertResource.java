@@ -13,16 +13,15 @@ import javax.ws.rs.core.Response;
 
 import org.eclipse.vorto.mapping.engine.MappingEngine;
 import org.eclipse.vorto.mapping.targetplatform.ditto.TwinPayloadFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-@Path("/convert")
-public class ConvertResource {
+import io.quarkus.arc.profile.IfBuildProfile;
 
-    private static final Logger LOG = LoggerFactory.getLogger(ConvertResource.class);
+@Path("/convert")
+@IfBuildProfile("dev")
+public class ConvertResource {
 
     @Inject
     VortoRepository repository;
