@@ -64,7 +64,7 @@ public class Converter {
         var modelId = event.getExtension("model_id");
         var deviceId = event.getExtension("device_id");
 
-        LOG.info("Converting - modelId: {}, deviceId: {}", modelId, deviceId);
+        LOG.debug("Converting - modelId: {}, deviceId: {}", modelId, deviceId);
 
         if (!(modelId instanceof String)) {
             return Response.ok(event).build();
@@ -110,7 +110,7 @@ public class Converter {
         var newData = GSON.toJson(ditto);
 
         var result = new CloudEventBuilder(event)
-                .withData("application/json", newData.getBytes(StandardCharsets.UTF_8))
+                .withData(MediaType.APPLICATION_JSON, newData.getBytes(StandardCharsets.UTF_8))
                 .build();
 
         LOG.info("Outcome: {}", newData);
