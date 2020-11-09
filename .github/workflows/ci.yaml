@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    tags:
+      - "v*"
   pull_request:
 
 jobs:
@@ -11,7 +13,6 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      CONTAINER_REGISTRY: ghcr.io/${{ github.repository_owner }}
       IMAGE_NAME: vorto-converter
 
     steps:
@@ -40,14 +41,21 @@ jobs:
 
       - name: Create image
         run: |
-          docker build -f src/main/docker/Dockerfile.fast-jar -t vorto-converter .
+          docker build -f src/main/docker/Dockerfile.fast-jar -t $IMAGE_NAME .
 
       - name: Login to github container repository
-        if: ${{github.head_ref == ''}}
+        if: ${{github.head_ref == ''}} # only for non-PRs
         run: echo "${{ secrets.GHCR_PAT }}" | docker login https://ghcr.io -u ${{ github.actor }} --password-stdin
 
-      - name: Push image
-        if: ${{github.head_ref == ''}}
+      - name: Push image to github container repository
+        if: ${{github.head_ref == ''}} # only for non-PRs
         run: |
-          docker tag vorto-converter ${CONTAINER_REGISTRY}/${IMAGE_NAME}:latest
-          docker push ${CONTAINER_REGISTRY}/${IMAGE_NAME}:latest
+          IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          [ "$VERSION" == "main" ] && VERSION=latest
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$VERSION
+          docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
+          docker push $IMAGE_ID:$VERSION
