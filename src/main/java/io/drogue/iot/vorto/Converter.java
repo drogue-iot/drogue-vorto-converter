@@ -62,8 +62,8 @@ public class Converter {
                     .build();
         }
 
-        var modelId = event.getExtension("model_id");
-        var deviceId = event.getExtension("device_id");
+        var modelId = event.getExtension("modelid");
+        var deviceId = event.getExtension("deviceid");
 
         LOG.debug("Converting - modelId: {}, deviceId: {}", modelId, deviceId);
 
@@ -79,7 +79,7 @@ public class Converter {
 
         final Object data;
         if (isJson(event.getDataContentType())) {
-            data = GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(event.getData()), StandardCharsets.UTF_8), Map.class);
+            data = GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(event.getData().toBytes()), StandardCharsets.UTF_8), Map.class);
         } else {
             data = event.getData();
         }

@@ -34,7 +34,7 @@
         <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
 
         <vorto.version>0.12.6</vorto.version>
-        <cloudevents.version>2.0.0-milestone3</cloudevents.version>
+        <cloudevents.version>2.0.0.RC2</cloudevents.version>
     </properties>
 
     <dependencyManagement>
