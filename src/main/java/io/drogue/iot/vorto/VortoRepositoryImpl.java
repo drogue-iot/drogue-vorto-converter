@@ -27,12 +27,12 @@ public class VortoRepositoryImpl implements VortoRepository {
 
     @CacheResult(cacheName = "mapping-cache")
     @Override
-    public Optional<IMappingSpecification> getById(String id) {
-        if (!client.exists(id).exists) {
+    public Optional<IMappingSpecification> getMappingByModelId(final String id) {
+        if (!client.mappingExists(id).exists) {
             return Optional.empty();
         }
 
-        var spec = client.getModel(id);
+        var spec = client.getMapping(id);
 
         LOG.debug("Spec:\n{}", spec);
 

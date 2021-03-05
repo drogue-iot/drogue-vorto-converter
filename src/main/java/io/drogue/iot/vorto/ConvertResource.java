@@ -37,7 +37,7 @@ public class ConvertResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response convert(@PathParam("modelId") final String modelId, @PathParam("deviceId") final String deviceId, final Map<String, Object> input) {
 
-        var spec = repository.getById(modelId);
+        var spec = repository.getMappingByModelId(modelId);
         if (spec.isEmpty()) {
             return Response
                     .status(Response.Status.NOT_FOUND)

@@ -27,7 +27,7 @@ public class MockVortoRepository implements VortoRepository {
     }
 
     @Override
-    public Optional<IMappingSpecification> getById(String id) {
+    public Optional<IMappingSpecification> getMappingByModelId(String id) {
         return Optional.ofNullable(this.mappings.get(id));
     }
 

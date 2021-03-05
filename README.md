@@ -22,6 +22,16 @@ model description and mapping information, stored in a Vorto repository.
 
 ## Using
 
+The converter will consume events which have:
+
+  * An extension attribute named `application` containing a non-empty String with the information used as Ditto namespace.
+  * An extension attribute named `device` containing a non-empty String with the information used as Ditto device ID.
+  * A data-schema of `vorto:`, with the model ID as schema specific part: `vorto:io.drogue.demo:FirstTestDevice:1.0.0`
+
+All other events will be returned as-is.
+
+## Deploying
+
 You can see a more integrated example in the [drogue-cloud](https://github.com/drogue-iot/drogue-cloud) repository, as
 part of the "digital twin" deployment.
 

@@ -1,5 +1,7 @@
 package io.drogue.iot.vorto;
 
+import static io.drogue.iot.vorto.Attributes.isNonEmptyString;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
@@ -62,18 +64,27 @@ public class Converter {
                     .build();
         }
 
-        var modelId = event.getExtension("modelid");
-        var deviceId = event.getExtension("deviceid");
+        var dataSchema = event.getDataSchema();
+        var appIdValue = event.getExtension("application");
+        var deviceIdValue = event.getExtension("device");
 
-        LOG.debug("Converting - modelId: {}, deviceId: {}", modelId, deviceId);
+        LOG.debug("Converting - dataSchema: {}, appId: {}, deviceId: {}", dataSchema, appIdValue, deviceIdValue);
 
-        if (!(modelId instanceof String)) {
+        if (!(dataSchema != null && isNonEmptyString(appIdValue) && isNonEmptyString(deviceIdValue))) {
             return Response.ok(event).build();
         }
 
-        if (!(deviceId instanceof String)) {
+        if (!dataSchema.getScheme().equals("vorto")) {
+            // must be prefixed with "vorto:"
             return Response.ok(event).build();
         }
+
+        var modelId = dataSchema.getSchemeSpecificPart();
+
+        LOG.debug("Model ID: {}", modelId);
+
+        var appId = (String) appIdValue;
+        var deviceId = (String) deviceIdValue;
 
         LOG.debug("CloudEvent: {}", event);
 
@@ -88,13 +99,13 @@ public class Converter {
             LOG.debug("Data: {}", data);
         }
 
-        var spec = repository.getById(modelId.toString());
+        var spec = repository.getMappingByModelId(modelId);
         if (spec.isEmpty()) {
             LOG.debug("Model {} not found", modelId);
             return Response
                     .status(Response.Status.NOT_FOUND)
                     .type(MediaType.APPLICATION_JSON)
-                    .entity(new ErrorInformation("ModelNotFound", String.format("Unable to find model: '%s'", modelId)))
+                    .entity(new ErrorInformation("MappingNotFound", String.format("Unable to find mapping for model: '%s'", modelId)))
                     .build();
         }
 
@@ -107,7 +118,7 @@ public class Converter {
         var output = engine
                 .mapSource(data);
 
-        var ditto = TwinPayloadFactory.toDittoProtocol(output, deviceId.toString());
+        var ditto = TwinPayloadFactory.toDittoProtocol(output, appId + ":" + deviceId);
 
         var newData = GSON.toJson(ditto);
 

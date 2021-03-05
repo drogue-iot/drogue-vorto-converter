@@ -37,14 +37,14 @@ public interface VortoClient {
     @Path("/mappings/specifications/{modelId}/exists")
     @ClientHeaderParam(name = "Authorization", value = "{getAuthorizationHeader}", required = false)
     @Produces(MediaType.APPLICATION_JSON)
-    ExistsResult exists(@PathParam("modelId") String modelId);
+    ExistsResult mappingExists(@PathParam("modelId") String modelId);
 
 
     @GET
     @Path("/mappings/specifications/{modelId}")
     @ClientHeaderParam(name = "Authorization", value = "{getAuthorizationHeader}", required = false)
     @Produces(MediaType.APPLICATION_JSON)
-    String getModel(@PathParam("modelId") String modelId);
+    String getMapping(@PathParam("modelId") String modelId);
 
     default String[] getAuthorizationHeader() {
         final Config config = ConfigProvider.getConfig();
