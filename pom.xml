@@ -6,7 +6,7 @@
 
     <groupId>io.drogue.iot</groupId>
     <artifactId>drogue-vorto-converter</artifactId>
-    <version>0.1.2-SNAPSHOT</version>
+    <version>0.2.0</version>
 
     <inceptionYear>2020</inceptionYear>
 
