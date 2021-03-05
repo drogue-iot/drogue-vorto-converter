@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.ws.rs.WebApplicationException;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
@@ -28,7 +29,21 @@ public class VortoRepositoryImpl implements VortoRepository {
     @CacheResult(cacheName = "mapping-cache")
     @Override
     public Optional<IMappingSpecification> getMappingByModelId(final String id) {
-        if (!client.mappingExists(id).exists) {
+
+        // check if a model exists
+        boolean exists = false;
+        try {
+            exists = client.mappingExists(id).exists;
+        } catch (WebApplicationException e) {
+            // if we are not allowed to access the model, this URL will return 404 ...
+            if (e.getResponse().getStatus() != 404) {
+                // ... otherwise we fail
+                throw e;
+            }
+            // ... in case of 404, we act as we didn't find anything
+        }
+        if (!exists) {
+            LOG.debug("Not found: {}", id);
             return Optional.empty();
         }
 
