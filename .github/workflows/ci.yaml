@@ -41,7 +41,7 @@ jobs:
 
       - name: Create image
         run: |
-          docker build -f src/main/docker/Dockerfile.fast-jar -t $IMAGE_NAME .
+          docker build -f src/main/docker/Dockerfile.jvm -t $IMAGE_NAME .
 
       - name: Login to github container repository
         if: ${{github.head_ref == ''}} # only for non-PRs
