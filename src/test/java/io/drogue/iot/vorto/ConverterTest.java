@@ -22,8 +22,9 @@ public class ConverterTest {
                 .header("Ce-Id", "123")
                 .header("Content-Type", "application/json")
                 .header("Ce-Subject", "TEXT")
-                .header("Ce-deviceid", "my:dev1")
-                .header("Ce-modelid", "vorto.private.ctron:DeviceOne:1.0.0")
+                .header("Ce-application", "my")
+                .header("Ce-device", "dev1")
+                .header("Ce-dataschema", "vorto:vorto.private.ctron:DeviceOne:1.0.0")
                 .body("{\"temp\": 1.23}")
                 .post("/")
 

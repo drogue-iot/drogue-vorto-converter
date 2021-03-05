@@ -70,11 +70,15 @@ public class Converter {
 
         LOG.debug("Converting - dataSchema: {}, appId: {}, deviceId: {}", dataSchema, appIdValue, deviceIdValue);
 
-        if (!(dataSchema != null && isNonEmptyString(appIdValue) && isNonEmptyString(deviceIdValue))) {
+        if ((dataSchema == null || !isNonEmptyString(appIdValue) || !isNonEmptyString(deviceIdValue))) {
             return Response.ok(event).build();
         }
 
-        if (!dataSchema.getScheme().equals("vorto")) {
+        var scheme = dataSchema.getScheme();
+
+        LOG.debug("Scheme: {}", scheme);
+
+        if (!scheme.equals("vorto")) {
             // must be prefixed with "vorto:"
             return Response.ok(event).build();
         }

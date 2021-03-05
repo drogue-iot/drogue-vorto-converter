@@ -9,6 +9,6 @@ public final class Attributes {
             return false;
         }
 
-        return ((String) value).isBlank();
+        return !((String) value).isBlank();
     }
 }
